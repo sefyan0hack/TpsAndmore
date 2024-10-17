@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#define min(a,b) (((a) < (b)) ? (a) : (b))
+
 typedef struct  Poly
 {
     float cof;
@@ -14,7 +17,34 @@ typedef struct Node
     struct Node* next;
 } Node;
 typedef Node* list;
+int list_size(list lst){
+    if(lst == NULL) return -1;
 
+    int count = 0;
+    Node * curr = lst;
+    while (curr != NULL)
+    {
+        count++;
+        curr = curr->next;
+    }
+
+    return count;
+}
+Node* list_at(list lst, int index){
+    assert(index >= 0);
+
+    if(index >= list_size(lst)) return NULL;
+
+    int i = 0;
+    Node * curr = lst;
+    while (curr != NULL)
+    {
+        if(i++ == index) break;
+        curr = curr->next;
+    }
+
+    return curr;
+}
 void push_back(list * lst, Poly monom){
     assert(lst != NULL);
     Node *newNode = malloc(sizeof(Node));
@@ -103,6 +133,35 @@ list list_copy(list lst){
     }
     return newL;
 }
+
+list polynme_add(list l, list r){
+    list new = NULL;
+    if(l == NULL || r == NULL) return new;
+
+    int lsize = list_size(l);
+    int rsize = list_size(r);
+
+    Node * curr = l;
+    for(int i = 0; i < max(lsize, rsize) ; i++){
+        float l_cof_i = 0.0f;
+
+        float r_cof_i = 0.0f;
+
+        Node* l_i = list_at(l, i);
+        Node* r_i = list_at(r, i);
+
+        if(l_i){
+            l_cof_i = l_i->data.cof;
+        }
+        if(r_i){
+            r_cof_i = r_i->data.cof;
+        }
+
+        Poly n = { l_cof_i + r_cof_i, max(lsize, rsize) - i};
+        push_back(&new, n);
+    }
+    return new;
+}
 int main(){
     Poly a, b, c;
     list my_polynom = NULL;
@@ -122,6 +181,8 @@ int main(){
     printf("-----------------------\n");
     cpy = list_copy(my_polynom);
     print(cpy);
+    printf("-----------------------\n");
 
+    print(polynme_add(my_polynom, cpy));
     return 0;
 }
