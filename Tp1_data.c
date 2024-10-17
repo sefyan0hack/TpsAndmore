@@ -141,6 +141,9 @@ list polynme_add(list l, list r){
     int lsize = list_size(l);
     int rsize = list_size(r);
 
+    if( lsize == 0 ) return list_copy(r);
+    if( rsize == 0 ) return list_copy(l);
+
     Node * curr = l;
     for(int i = 0; i < max(lsize, rsize) ; i++){
         float l_cof_i = 0.0f;
@@ -162,8 +165,23 @@ list polynme_add(list l, list r){
     }
     return new;
 }
+list derive(list lst){
+    list new = NULL;
+    if(lst == NULL ) return new;
+
+    int lst_size = list_size(lst);
+
+    for (int i = 0; i < lst_size ; i++)
+    {
+        Node * curr = list_at(lst, i);
+        Poly n = { curr->data.cof * curr->data.exp, curr->data.exp - 1};
+        push_back(&new, n);
+    }
+
+    return new;
+}
 int main(){
-    Poly a, b, c;
+    Poly a = {1,1}, b = {1,2}, c = {1,3};
     list my_polynom = NULL;
     list cpy = NULL;
 
@@ -184,5 +202,6 @@ int main(){
     printf("-----------------------\n");
 
     print(polynme_add(my_polynom, cpy));
+    print(derive(my_polynom));
     return 0;
 }
