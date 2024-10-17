@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <assert.h>
 
 #define max(a,b) (((a) > (b)) ? (a) : (b))
@@ -134,7 +135,7 @@ list list_copy(list lst){
     return newL;
 }
 
-list polynme_add(list l, list r){
+list polynome_add(list l, list r){
     list new = NULL;
     if(l == NULL || r == NULL) return new;
 
@@ -180,15 +181,31 @@ list derive(list lst){
 
     return new;
 }
+float polynome_x(list lst, float x){
+    list new = NULL;
+    if(lst == NULL ) exit(1);
+
+    float value = 0;
+    int lst_size = list_size(lst);
+    if(lst_size == 0) return 0.0f;
+
+    for (int i = 0; i < lst_size; i++)
+    {
+        Node * curr = list_at(lst, i);
+        value += curr->data.cof * pow(x, curr->data.exp);
+    }
+
+    return value;
+}
 int main(){
     Poly a = {1,1}, b = {1,2}, c = {1,3};
     list my_polynom = NULL;
     list cpy = NULL;
 
     Poly n = { 10, 10};
-    saisie_monom(&a);
-    saisie_monom(&b);
-    saisie_monom(&c);
+    // saisie_monom(&a);
+    // saisie_monom(&b);
+    // saisie_monom(&c);
 
     ajoute(&my_polynom, a);
     ajoute(&my_polynom, b);
@@ -201,7 +218,10 @@ int main(){
     print(cpy);
     printf("-----------------------\n");
 
-    print(polynme_add(my_polynom, cpy));
+    print(polynome_add(my_polynom, cpy));
     print(derive(my_polynom));
+
+    printf("-----------------------\n");
+    printf("%f", polynome_x(my_polynom, 2));
     return 0;
 }
