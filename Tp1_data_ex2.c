@@ -66,6 +66,21 @@ void print(list lst){
     printf("\n");
     i++;
 }
+
+int Mat_at(list* Mat, int row, int col){
+    assert(Mat[row] != NULL);
+
+    Node* curr =  Mat[row];
+    while (curr != NULL)
+    {
+        if(curr->col == col){
+            return curr->val;
+        }
+        curr = curr->next;
+    }
+
+    return 0;
+}
 int main(){
 
     int m[3][3] = {
@@ -75,11 +90,11 @@ int main(){
     };
     list * newM = creuse_Mat(&m[0][0], 3, 3);
 
-    for (int i = 0; i < 3; i++)
-    {
-        print(newM[i]);
-        printf("\n");
-    }
+    // for (int i = 0; i < 3; i++)
+    // {
+    //     print(newM[i]);
+    //     printf("\n");
+    // }
     
-
+    printf("%d \n", Mat_at(newM, 2, 1));
 }
